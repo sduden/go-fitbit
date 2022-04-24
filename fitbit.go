@@ -37,6 +37,7 @@ type Session struct {
 	OAuthConfg *oauth2.Config
 	Token      *oauth2.Token
 	Ratelimit  Ratelimit
+	Locale     string // if unset, defaults to the previous behavior (de_DE)
 	httpClient *http.Client
 	mutex      sync.RWMutex
 }
@@ -127,8 +128,14 @@ func (m *Session) makeRequest(url string) ([]byte, error) {
 
 	// Set custom header
 	req.Header.Set("User-Agent", "go-fitbit")
-	req.Header.Set("Accept-Language", "de_DE")
-	req.Header.Set("Accept-Locale", "de_DE")
+
+	if m.Locale != "" {
+		req.Header.Set("Accept-Language", m.Locale)
+		req.Header.Set("Accept-Locale", m.Locale)
+	} else {
+		req.Header.Set("Accept-Language", "de_DE")
+		req.Header.Set("Accept-Locale", "de_DE")
+	}
 
 	// Fire request
 	response, err := m.httpClient.Do(req)
@@ -178,8 +185,13 @@ func (m *Session) makePOSTRequest(targetURL string, param map[string]string) ([]
 
 	// Set custom header
 	req.Header.Set("User-Agent", "go-fitbit")
-	req.Header.Set("Accept-Language", "de_DE")
-	req.Header.Set("Accept-Locale", "de_DE")
+	if m.Locale != "" {
+		req.Header.Set("Accept-Language", m.Locale)
+		req.Header.Set("Accept-Locale", m.Locale)
+	} else {
+		req.Header.Set("Accept-Language", "de_DE")
+		req.Header.Set("Accept-Locale", "de_DE")
+	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	// Fire request
@@ -224,9 +236,13 @@ func (m *Session) makeDELETERequest(url string) ([]byte, error) {
 
 	// Set custom header
 	req.Header.Set("User-Agent", "go-fitbit")
-	req.Header.Set("Accept-Language", "de_DE")
-	req.Header.Set("Accept-Locale", "de_DE")
-
+	if m.Locale != "" {
+		req.Header.Set("Accept-Language", m.Locale)
+		req.Header.Set("Accept-Locale", m.Locale)
+	} else {
+		req.Header.Set("Accept-Language", "de_DE")
+		req.Header.Set("Accept-Locale", "de_DE")
+	}
 	// Fire request
 	response, err := m.httpClient.Do(req)
 	if err != nil {
